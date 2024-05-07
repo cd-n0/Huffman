@@ -1,4 +1,4 @@
-package org.example;
+package com.onursinan;
 
 class HuffmanTreeNode{
     private Character character;
