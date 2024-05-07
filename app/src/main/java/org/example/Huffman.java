@@ -40,6 +40,11 @@ public class Huffman implements Serializable{
         System.out.println(char2huff);
     }
 
+    /**
+     * Generates a Huffman tree based on the character frequencies.
+     * 
+     * @return The root node of the Huffman tree.
+     */
     private HuffmanTreeNode generateTree(){
         generateMinheap();
         HuffmanTreeNode root = new HuffmanTreeNode();
@@ -61,6 +66,11 @@ public class Huffman implements Serializable{
         return root;
     }
 
+    /**
+     * Calculates the frequency of each character in the input text.
+     * 
+     * @return A HashMap containing characters as keys and their corresponding frequencies as values.
+     */
     private HashMap<Character, Long> calculateCharacterFrequency(){
         HashMap<Character, Long> charFrequency = new HashMap<>();
         for (int i = 0; i < text.length(); i++){
@@ -74,6 +84,9 @@ public class Huffman implements Serializable{
         return charFrequency;
     }
 
+    /**
+     * Generates a min-heap of Huffman tree nodes based on character frequencies.
+     */
     private void generateMinheap(){
         for (Character character: charFrequency.keySet()){
             Long frequency = charFrequency.get(character);
@@ -82,6 +95,12 @@ public class Huffman implements Serializable{
         }
     }
 
+    /**
+     * Generates Huffman codes recursively for each character in the Huffman tree.
+     * 
+     * @param node The current node being traversed.
+     * @param code The Huffman code generated so far for the current node.
+     */
     private void generateCodesRecursive(HuffmanTreeNode node, String code){
         if (node != null){
             if (!isLeafNode(node)){
@@ -95,12 +114,23 @@ public class Huffman implements Serializable{
         }
     }
 
+    /**
+     * Generates Huffman codes for each character in the Huffman tree.
+     * 
+     * @param root The root node of the Huffman tree.
+     */
     private void generateCodes(HuffmanTreeNode root){
         String code = "";
         HuffmanTreeNode node = root;
         generateCodesRecursive(node, code);
     }
 
+    /**
+     * Checks if a given node is a leaf node in the Huffman tree.
+     * 
+     * @param node The node to be checked.
+     * @return {@code true} if the node is a leaf node, {@code false} otherwise.
+     */
     private boolean isLeafNode(HuffmanTreeNode node){
         return node.getLeft() == null && node.getRight() == null;
     }
