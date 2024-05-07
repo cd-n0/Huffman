@@ -5,6 +5,6 @@ package org.example;
 
 public class App {
     public static void main(String[] args) {
-        Huffman h = new Huffman("aaaaabbbbcccdde");
+        Huffman h = new Huffman("Hello World!");
     }
 }

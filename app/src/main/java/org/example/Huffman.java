@@ -9,13 +9,13 @@ import java.util.PriorityQueue;
 // Console
 public class Huffman implements Serializable{
     private final boolean DEBUG = true;
-    private transient String text;
+    private transient String inputString;
     private transient PriorityQueue<HuffmanTreeNode> priorityQueue;
     private HashMap<Character, String> char2huff;
     private HashMap<String, Character> huff2char;
     private HashMap<Character, Long> charFrequency;
-    Huffman(String text){
-        this.text = text;
+    Huffman(String inputString){
+        this.inputString = inputString;
         this.char2huff = new HashMap<>();
         this.huff2char = new HashMap<>();
         charFrequency = calculateCharacterFrequency();
@@ -37,7 +37,9 @@ public class Huffman implements Serializable{
         };
         priorityQueue = new PriorityQueue<HuffmanTreeNode>(charFrequency.size(), cmp);
         generateCodes(generateTree());
-        System.out.println(char2huff);
+        String encodedText = encode();
+        System.out.println(encodedText);
+        System.out.println(decode(encodedText));
     }
 
     /**
@@ -73,11 +75,11 @@ public class Huffman implements Serializable{
      */
     private HashMap<Character, Long> calculateCharacterFrequency(){
         HashMap<Character, Long> charFrequency = new HashMap<>();
-        for (int i = 0; i < text.length(); i++){
-            if(charFrequency.containsKey(text.charAt(i))) {
-                charFrequency.put(text.charAt(i), charFrequency.get(text.charAt(i)) + 1L);
+        for (int i = 0; i < inputString.length(); i++){
+            if(charFrequency.containsKey(inputString.charAt(i))) {
+                charFrequency.put(inputString.charAt(i), charFrequency.get(inputString.charAt(i)) + 1L);
             }   else {
-                charFrequency.put(text.charAt(i), 1L);
+                charFrequency.put(inputString.charAt(i), 1L);
             }
         }
 
@@ -134,4 +136,39 @@ public class Huffman implements Serializable{
     private boolean isLeafNode(HuffmanTreeNode node){
         return node.getLeft() == null && node.getRight() == null;
     }
+
+    /**
+     * Encodes the original string
+     * 
+     * @return The encoded string.
+     */
+    public String encode(){
+        String encodedText = "";
+		Character character;
+		for(int i = 0; i < inputString.length(); i++){
+			character = inputString.charAt(i);
+            encodedText = encodedText + char2huff.get(character);
+		}
+		return encodedText;
+	}
+	
+    /**
+     * Decodes the encoded string
+     * 
+     * @param encodedString The encoded string.
+     * @return The decoded string.
+     */
+	public String decode(String encodedString){
+        String decodedText = "";
+		String readHuffmanCode = "";
+		
+		for(int i=0; i < encodedString.length(); i++){
+			readHuffmanCode+= encodedString.charAt(i);
+			if (huff2char.containsKey(readHuffmanCode)){
+				decodedText = decodedText + huff2char.get(readHuffmanCode);
+				readHuffmanCode = "";
+			}
+		}
+		return decodedText;
+	}
 }
