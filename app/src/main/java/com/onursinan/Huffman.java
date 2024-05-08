@@ -8,13 +8,17 @@ import java.util.PriorityQueue;
 // HashMap, MinHeap, Priority Queue
 // Console
 public class Huffman implements Serializable{
-    private final boolean DEBUG = true;
+    private final boolean DEBUG = false;
     private transient String inputString;
+    private transient String encodedString;
+    private transient String decodedString;
     private transient PriorityQueue<HuffmanTreeNode> priorityQueue;
     private HashMap<Character, String> char2huff;
     private HashMap<String, Character> huff2char;
     private HashMap<Character, Long> charFrequency;
     Huffman(String inputString){
+        this.encodedString = "";
+        this.decodedString = "";
         this.inputString = inputString;
         this.char2huff = new HashMap<>();
         this.huff2char = new HashMap<>();
@@ -37,9 +41,9 @@ public class Huffman implements Serializable{
         };
         priorityQueue = new PriorityQueue<HuffmanTreeNode>(charFrequency.size(), cmp);
         generateCodes(generateTree());
-        String encodedText = encode();
-        System.out.println(encodedText);
-        System.out.println(decode(encodedText));
+        System.out.println(encode());
+        System.out.println(decode());
+        System.out.println("Compressed the text by " + getCompressionPercentage() + "%");
     }
 
     /**
@@ -61,8 +65,6 @@ public class Huffman implements Serializable{
             }
             if (priorityQueue.peek() != null){
                 priorityQueue.offer(root);
-            } else{
-                break;
             }
         }
         return root;
@@ -143,32 +145,40 @@ public class Huffman implements Serializable{
      * @return The encoded string.
      */
     public String encode(){
-        String encodedText = "";
 		Character character;
 		for(int i = 0; i < inputString.length(); i++){
 			character = inputString.charAt(i);
-            encodedText = encodedText + char2huff.get(character);
+            encodedString += char2huff.get(character);
 		}
-		return encodedText;
+		return encodedString;
 	}
 	
     /**
      * Decodes the encoded string
      * 
-     * @param encodedString The encoded string.
      * @return The decoded string.
      */
-	public String decode(String encodedString){
-        String decodedText = "";
+	public String decode(){
 		String readHuffmanCode = "";
 		
-		for(int i=0; i < encodedString.length(); i++){
-			readHuffmanCode+= encodedString.charAt(i);
+		for(int i = 0; i < encodedString.length(); i++){
+			readHuffmanCode += encodedString.charAt(i);
 			if (huff2char.containsKey(readHuffmanCode)){
-				decodedText = decodedText + huff2char.get(readHuffmanCode);
+				decodedString += huff2char.get(readHuffmanCode);
 				readHuffmanCode = "";
 			}
 		}
-		return decodedText;
+		return decodedString;
 	}
+
+    /**
+     * Gets the value of how much the text is compressed compared to the original one percentage-wise.
+     * 
+     * @return The compression rate in percentage.
+     */
+    public double getCompressionPercentage(){
+        Long currentLength = inputString.length() * 8L;
+        return (double) encodedString.length() / currentLength * 100;
+    }
+
 }
