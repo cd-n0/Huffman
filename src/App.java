@@ -98,7 +98,7 @@ public class App {
                     if (!writeToFile.equalsIgnoreCase("n")) {
                         System.out.print("Input a file name/path for the output file: ");
                         String outputFileName = scanner.nextLine();
-                        FileIO.writeFile(outputFileName, huffman.getEncodedString());
+                        FileIO.writeBinaryFile(outputFileName, BinaryIO.stringToBytes(huffman.getEncodedString()));
                     }
                 }
                 break;
@@ -126,7 +126,7 @@ public class App {
                 if (!writeToFile.equalsIgnoreCase("n")) {
                     System.out.print("Input a file name/path for the output file: ");
                     String outputFileName = scanner.nextLine();
-                    FileIO.writeFile(outputFileName, huffman.getEncodedString());
+                    FileIO.writeBinaryFile(outputFileName, BinaryIO.stringToBytes(huffman.getEncodedString()));
                 }
                 break;
 
@@ -184,7 +184,9 @@ public class App {
             case 2:
                 System.out.print("Please input the file name/path you want to process: ");
                 fileName = scanner.nextLine();
-                input = FileIO.readFile(fileName);
+                byte[] binaryInput = FileIO.readBinaryFile(fileName);
+                input = BinaryIO.bytesToString(binaryInput);
+                System.out.println(input);
                 System.out.print("Please input the .ser file name/path to be used: ");
                 String serializedFile = scanner.nextLine();
 

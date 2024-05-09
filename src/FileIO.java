@@ -1,5 +1,3 @@
-
-
 import java.io.*;
 
 public class FileIO {
@@ -12,6 +10,7 @@ public class FileIO {
                 stringBuilder.append(line + "\n");
                 line = bufferedReader.readLine();
             }
+            bufferedReader.close();
         }
         catch (IOException e){
             System.out.println(e);
@@ -23,12 +22,37 @@ public class FileIO {
         File filename = new File(fname);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(filename))){
             bufferedWriter.write(content);
+            bufferedWriter.close();
         }
         catch (IOException e){
             System.out.println(e);
         }
         return stringBuilder.toString();
     }
+    public static byte[] readBinaryFile(String fname){
+        File filename = new File(fname);
+        byte[] byteArray = new byte[(int) filename.length()];
+        try (FileInputStream fileInputStream = new FileInputStream(filename)){
+                fileInputStream.read(byteArray);
+                fileInputStream.close();
+        }
+        catch (IOException e){
+            System.out.println(e);
+        }
+        return byteArray;
+    }
+
+    public static void writeBinaryFile(String fname, byte[] content){
+        File filename = new File(fname);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(filename)){
+                fileOutputStream.write(content);
+                fileOutputStream.close();
+        }
+        catch (IOException e){
+            System.out.println(e);
+        }
+    }
+
     public static void Serialize(String outputFile, Huffman huffman){
         try {
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(outputFile + ".ser"));
