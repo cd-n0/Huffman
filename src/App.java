@@ -199,7 +199,7 @@ public class App {
                             FileIO.writeFile(fileName, huffman.getDecodedString());
                         }
                     } else {
-                        System.out.print("The returned string was null");
+                        System.out.println("The returned string was null");
                     }
                 }
                 break;
