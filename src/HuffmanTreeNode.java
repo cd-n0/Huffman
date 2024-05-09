@@ -1,5 +1,3 @@
-
-
 class HuffmanTreeNode{
     private Character character;
     private Long frequency;

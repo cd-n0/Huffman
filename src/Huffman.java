@@ -1,5 +1,5 @@
-
-
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -44,7 +44,7 @@ public class Huffman implements Serializable{
         encode();
     }
 
-    Huffman(String inputEncodedString, String inputSerFile){
+    Huffman(String inputEncodedString, String inputSerFile) throws FileNotFoundException, ClassNotFoundException, IOException{
         deserializeMaps(inputSerFile);
         this.encodedString = inputEncodedString;
         decode();
@@ -172,7 +172,7 @@ public class Huffman implements Serializable{
 				readHuffmanCode = "";
 			}
 		}
-        decodedString = decodedString.substring(4);
+        if(decodedString != null)decodedString = decodedString.substring(4);
 		return decodedString;
 	}
 
@@ -183,10 +183,11 @@ public class Huffman implements Serializable{
      */
     public double getCompressionPercentage(){
         Long currentLength = inputString.length() * 8L;
-        return (double) encodedString.length() / currentLength * 100;
+        int paddingLength = encodedString.length() % 8;
+        return (double) (encodedString.length() + paddingLength + 8) / currentLength * 100;
     }
 
-    private void deserializeMaps(String inputFile){
+    private void deserializeMaps(String inputFile) throws FileNotFoundException, ClassNotFoundException, IOException{
         Huffman huffman = (Huffman) FileIO.Deserialize(inputFile);
         this.char2huff = huffman.char2huff;
         this.huff2char = huffman.huff2char;

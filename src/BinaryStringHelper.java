@@ -1,9 +1,7 @@
+import java.lang.NumberFormatException;
 
-
-import java.io.*;
-
-class BinaryIO{
-    public static byte[] stringToBytes(String binaryString) {
+class BinaryStringHelper{
+    public static byte[] stringToBytes(String binaryString) throws NumberFormatException{
         byte paddingLength = 0;
         while (binaryString.length() % 8 != 0) {
             binaryString += "0";
@@ -38,27 +36,5 @@ class BinaryIO{
         binaryString = binaryString.substring(0, binaryString.length()  - (8 + byteArray[byteArray.length - 1]));
 
         return binaryString;
-    }
-
-    public static void writeByteArrayToFile(byte[] dataForWriting, String filePath) {
-        try (FileOutputStream outputStream = new FileOutputStream(new File(filePath))) {
-            outputStream.write(dataForWriting);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static byte[] readFileToByteArray(String filePath) {
-        try (FileInputStream inputStream = new FileInputStream(new File(filePath))) {
-            byte[] buffer = new byte[(int) new File(filePath).length()];
-            int bytesRead = inputStream.read(buffer);
-            if (bytesRead == -1) {
-                return null; // File is empty
-            }
-            return buffer;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 }
