@@ -4,8 +4,11 @@
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
+import java.text.DecimalFormat;
 
 public class App {
+
+    private static final DecimalFormat decimalFormat = new DecimalFormat("0.00");
     private static final boolean DEBUG = false;
     public static void main(String[] args) {
         tuiMethod();
@@ -35,7 +38,7 @@ public class App {
                     }
                     catch (FileNotFoundException e) {
                         if(DEBUG)e.printStackTrace();
-                        System.out.println("File not found");
+                        System.out.println("File not found, or illegal path");
                     }
                     catch (IOException e) {
                         if(DEBUG)e.printStackTrace();
@@ -54,7 +57,7 @@ public class App {
                     }
                     catch (FileNotFoundException e) {
                         if(DEBUG)e.printStackTrace();
-                        System.out.println("File not found");
+                        System.out.println("File not found, or illegal path");
                     }
                     catch (IOException e) {
                         if(DEBUG)e.printStackTrace();
@@ -63,6 +66,7 @@ public class App {
                     reuse = reusePrompt(scanner);
                     break;
                 case 3:
+                    reuse = false;
                     invalidChoice = false;
                     break;
                 default:
@@ -77,7 +81,7 @@ public class App {
     }
 
     public static boolean reusePrompt(Scanner scanner){
-        System.out.print("Again? y/N: ");
+        System.out.print("Try again? y/N: ");
         String choice = scanner.nextLine();
         if (choice.equalsIgnoreCase("y")) return true;
         else return false;
@@ -105,17 +109,17 @@ public class App {
                 } else {
                     Huffman huffman = new Huffman(input);
                     System.out.println(huffman.getEncodedString());
-                    System.out.println("Compressed to its " + huffman.getCompressionPercentage() + "%");
-                    System.out.print("Would you like to serialize? Y/n: ");
+                    System.out.println("Compressed to its " + decimalFormat.format(huffman.getCompressionPercentage()) + "%");
+                    System.out.print("Would you like to serialize the Huffman class, for decoding the text later? Y/n: ");
                     String doSerialization = scanner.nextLine();
 
                     if (!doSerialization.equalsIgnoreCase("n")) {
-                        System.out.print("Input a filename for the serialized class: ");
+                        System.out.print("Input a file name/path for the serialized class: ");
                         String serFileName = scanner.nextLine();
                         // Perform serialization
                         FileIO.Serialize(serFileName, huffman);
                     }
-                    System.out.print("Would you like to write it to a file? Y/n: ");
+                    System.out.print("Would you like to write the encoded text to a file? Y/n: ");
                     String writeToFile = scanner.nextLine();
                     if (!writeToFile.equalsIgnoreCase("n")) {
                         System.out.print("Input a file name/path for the output file: ");
@@ -133,17 +137,17 @@ public class App {
                 Huffman huffman = new Huffman(input);
 
                 System.out.println(huffman.getEncodedString());
-                System.out.println("Compressed to its " + huffman.getCompressionPercentage() + "%");
-                System.out.print("Would you like to serialize? Y/n: ");
+                System.out.println("Compressed to its " + decimalFormat.format(huffman.getCompressionPercentage()) + "%");
+                System.out.print("Would you like to serialize the Huffman class, for decoding the text later? Y/n: ");
                 String doSerialization = scanner.nextLine();
                 if (!doSerialization.equalsIgnoreCase("n")) {
-                    System.out.print("Input a filename for the serialized class: ");
+                    System.out.print("Input a file name/path for the serialized class: ");
                     String serFileName = scanner.nextLine();
                     // Serialization for buffer
                     FileIO.Serialize(serFileName, huffman);
                 }
 
-                System.out.print("Would you like to write it to a file? Y/n: ");
+                System.out.print("Would you like to write the decoded text to a file? Y/n: ");
                 String writeToFile = scanner.nextLine();
                 if (!writeToFile.equalsIgnoreCase("n")) {
                     System.out.print("Input a file name/path for the output file: ");

@@ -1,6 +1,6 @@
 import java.lang.NumberFormatException;
 
-class BinaryStringHelper{
+public class BinaryStringHelper{
     public static byte[] stringToBytes(String binaryString) throws NumberFormatException{
         byte paddingLength = 0;
         while (binaryString.length() % 8 != 0) {
