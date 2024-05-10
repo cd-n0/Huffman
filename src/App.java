@@ -81,7 +81,7 @@ public class App {
     }
 
     public static boolean reusePrompt(Scanner scanner){
-        System.out.print("Try again? y/N: ");
+        System.out.print("Start over? y/N: ");
         String choice = scanner.nextLine();
         if (choice.equalsIgnoreCase("y")) return true;
         else return false;
