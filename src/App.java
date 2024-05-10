@@ -87,9 +87,28 @@ public class App {
         else return false;
     }
 
+    public static String checkInput(String input, Scanner scanner){
+        if (input.isEmpty())
+        {
+            String newFileName = "";
+            while (newFileName.isEmpty())
+            {
+                System.out.print("Recieved empty input, please try again: ");
+                newFileName = scanner.nextLine();
+            }
+            return newFileName;
+        }
+        return input;
+    }
+
+
     public static void encodingMethod(Scanner scanner) throws FileNotFoundException, IOException
     {
         String input = "";
+        String showEncodedString = "";
+        String doSerialization = "";
+        String writeToFile = "";
+        Huffman huffman;
         System.out.println("Please select the method for inputting your string.");
         System.out.println("1.Text input");
         System.out.println("2.File input");
@@ -103,55 +122,64 @@ public class App {
                 System.out.print("Please input the text here: ");
                 input = scanner.nextLine();
 
-                if (input.isEmpty()) {
-                    System.out.println("Empty filename, restarting");
-                    tuiMethod();
-                } else {
-                    Huffman huffman = new Huffman(input);
+                input = checkInput(input, scanner);
+                huffman = new Huffman(input);
+                System.out.println("Compressed to its " + decimalFormat.format(huffman.getCompressionPercentage()) + "%");
+                System.out.print("Would you like to see the encoded text as zeros and ones? Y/n: ");
+                showEncodedString = scanner.nextLine();
+                if (!showEncodedString.equalsIgnoreCase("n")) {
                     System.out.println(huffman.getEncodedString());
-                    System.out.println("Compressed to its " + decimalFormat.format(huffman.getCompressionPercentage()) + "%");
-                    System.out.print("Would you like to serialize the Huffman class, for decoding the text later? Y/n: ");
-                    String doSerialization = scanner.nextLine();
+                }
 
-                    if (!doSerialization.equalsIgnoreCase("n")) {
-                        System.out.print("Input a file name/path for the serialized class: ");
-                        String serFileName = scanner.nextLine();
-                        // Perform serialization
-                        FileIO.Serialize(serFileName, huffman);
-                    }
-                    System.out.print("Would you like to write the encoded text to a file? Y/n: ");
-                    String writeToFile = scanner.nextLine();
-                    if (!writeToFile.equalsIgnoreCase("n")) {
-                        System.out.print("Input a file name/path for the output file: ");
-                        String outputFileName = scanner.nextLine();
-                        FileIO.writeBinaryFile(outputFileName, BinaryStringHelper.stringToBytes(huffman.getEncodedString()));
-                    }
+                System.out.print("Would you like to serialize the Huffman class, for decoding the text later? Y/n: ");
+                doSerialization = scanner.nextLine();
+                if (!doSerialization.equalsIgnoreCase("n")) {
+                    System.out.print("Input a file name/path for the serialized class: ");
+                    String serFileName = scanner.nextLine();
+                    serFileName = checkInput(serFileName, scanner);
+                    // Perform serialization
+                    FileIO.Serialize(serFileName, huffman);
+                }
+                System.out.print("Would you like to write the encoded text to a file? Y/n: ");
+                writeToFile = scanner.nextLine();
+                if (!writeToFile.equalsIgnoreCase("n")) {
+                    System.out.print("Input a file name/path for the output file: ");
+                    String outputFileName = scanner.nextLine();
+                    outputFileName = checkInput(outputFileName, scanner);
+                    FileIO.writeBinaryFile(outputFileName, BinaryStringHelper.stringToBytes(huffman.getEncodedString()));
                 }
                 break;
 
             case 2:
                 System.out.print("Please input the file name/path you want to process: ");
                 String fileName = scanner.nextLine();
+                fileName = checkInput(fileName, scanner);
                 input = FileIO.readFile(fileName);
 
-                Huffman huffman = new Huffman(input);
+                huffman = new Huffman(input);
 
-                System.out.println(huffman.getEncodedString());
                 System.out.println("Compressed to its " + decimalFormat.format(huffman.getCompressionPercentage()) + "%");
+                System.out.print("Would you like to see the encoded text as zeros and ones? Y/n: ");
+                showEncodedString = scanner.nextLine();
+                if (!showEncodedString.equalsIgnoreCase("n")) {
+                    System.out.println(huffman.getEncodedString());
+                }
                 System.out.print("Would you like to serialize the Huffman class, for decoding the text later? Y/n: ");
-                String doSerialization = scanner.nextLine();
+                doSerialization = scanner.nextLine();
                 if (!doSerialization.equalsIgnoreCase("n")) {
                     System.out.print("Input a file name/path for the serialized class: ");
                     String serFileName = scanner.nextLine();
+                    serFileName = checkInput(serFileName, scanner);
                     // Serialization for buffer
                     FileIO.Serialize(serFileName, huffman);
                 }
 
                 System.out.print("Would you like to write the decoded text to a file? Y/n: ");
-                String writeToFile = scanner.nextLine();
+                writeToFile = scanner.nextLine();
                 if (!writeToFile.equalsIgnoreCase("n")) {
                     System.out.print("Input a file name/path for the output file: ");
                     String outputFileName = scanner.nextLine();
+                    outputFileName = checkInput(outputFileName, scanner);
                     FileIO.writeBinaryFile(outputFileName, BinaryStringHelper.stringToBytes(huffman.getEncodedString()));
                 }
                 break;
@@ -172,6 +200,8 @@ public class App {
         // Please give .ser file and encoding string
         String input = "";
         String fileName = "";
+        String serializedFile = "";
+        Huffman huffman;
         System.out.println("Please select the method for inputting your string.");
         System.out.println("1.Text input");
         System.out.println("2.File input");
@@ -185,45 +215,54 @@ public class App {
                 System.out.print("Please input the text here: ");
                 input = scanner.nextLine();
 
-                if (input.isEmpty()) {
-                    System.out.println("Empty filename, restarting");
-                    tuiMethod();
-                } else {
-                    System.out.print("Please input the .ser file name/path to be used: ");
-                    String serializedFile = scanner.nextLine();
+                input = checkInput(input, scanner);
+                System.out.print("Please input the .ser file name/path to be used: ");
+                serializedFile = scanner.nextLine();
+                serializedFile = checkInput(serializedFile, scanner);
 
-                    Huffman huffman = new Huffman(input, serializedFile);
-                    if(huffman.getDecodedString() != null){
+                huffman = new Huffman(input, serializedFile);
+                if(huffman.getDecodedString() != null){
+                    System.out.print("Would you like to see the decoded text? Y/n: ");
+                    String showDecodedString = scanner.nextLine();
+                    if (!showDecodedString.equalsIgnoreCase("n")) {
                         System.out.println(huffman.getDecodedString());
-                        System.out.print("Would you like to write it to a file? Y/n: ");
-                        String writeToFile = scanner.nextLine();
-                        if (!writeToFile.equalsIgnoreCase("n")) {
-                            System.out.print("Input a file name/path for the output file: ");
-                            fileName = scanner.nextLine();
-                            FileIO.writeFile(fileName, huffman.getDecodedString());
-                        }
-                    } else {
-                        System.out.println("The returned string was null");
                     }
+                    System.out.print("Would you like to write it to a file? Y/n: ");
+                    String writeToFile = scanner.nextLine();
+                    if (!writeToFile.equalsIgnoreCase("n")) {
+                        System.out.print("Input a file name/path for the output file: ");
+                        fileName = scanner.nextLine();
+                        fileName = checkInput(fileName, scanner);
+                        FileIO.writeFile(fileName, huffman.getDecodedString());
+                    }
+                } else {
+                    System.out.println("The returned string was null");
                 }
                 break;
 
             case 2:
                 System.out.print("Please input the file name/path you want to process: ");
                 fileName = scanner.nextLine();
+                fileName = checkInput(fileName, scanner);
                 byte[] binaryInput = FileIO.readBinaryFile(fileName);
                 input = BinaryStringHelper.bytesToString(binaryInput);
                 if(DEBUG)System.out.println(input);
                 System.out.print("Please input the .ser file name/path to be used: ");
-                String serializedFile = scanner.nextLine();
+                serializedFile = scanner.nextLine();
+                serializedFile = checkInput(serializedFile, scanner);
 
-                Huffman huffman = new Huffman(input, serializedFile);
-                System.out.println(huffman.getDecodedString());
+                huffman = new Huffman(input, serializedFile);
+                System.out.print("Would you like to see the decoded text? Y/n: ");
+                String showDecodedString = scanner.nextLine();
+                if (!showDecodedString.equalsIgnoreCase("n")) {
+                    System.out.println(huffman.getDecodedString());
+                }
                 System.out.print("Would you like to write it to a file? Y/n: ");
                 String writeToFile = scanner.nextLine();
                 if (!writeToFile.equalsIgnoreCase("n")) {
                     System.out.print("Input a file name/path for the output file: ");
                     fileName = scanner.nextLine();
+                    fileName = checkInput(fileName, scanner);
                     FileIO.writeFile(fileName, huffman.getDecodedString());
                 }
 
